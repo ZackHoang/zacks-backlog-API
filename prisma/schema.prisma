@@ -17,7 +17,7 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   isAdmin Boolean
-  name String @unique
+  username String @unique
   password String
   createdAt DateTime @default(now())
   @@map("users")
@@ -26,28 +26,31 @@ model User {
 model Tag {
   id Int @id @default(autoincrement())
   name String @unique
-  posts Post[]
   @@map("tags")
 }
 
 model Post {
   id String @id @default(uuid())
-  tagsID Int
-  tags Tag @relation(fields: [tagsID], references: [id])
   isPublished Boolean
-  title String
+  title String @unique
   content String
   likes Int
-  comments Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("posts")
 }
 
+model TagsOnPosts {
+  tagID Int
+  postID String
+  @@id([tagID, postID])
+}
+
 model Comment {
   id String @id @default(uuid())
   postID String
-  post Post @relation(fields: [postID], references: [id])
+  replyID String?
   message String
+  createdAt DateTime @default(now())
   @@map("comments")
 }
